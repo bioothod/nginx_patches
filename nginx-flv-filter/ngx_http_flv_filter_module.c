@@ -125,8 +125,7 @@ static ngx_int_t ngx_http_flv_header_filter(ngx_http_request_t * r)
 		ngx_http_set_ctx(r, ctx, ngx_http_flv_filter_module);
 
 		r->headers_out.status = NGX_HTTP_OK;
-		r->headers_out.content_length_n +=
-		    sizeof(ngx_flv_header) - 1 - ctx->start;
+		r->headers_out.content_length_n += sizeof(ngx_flv_header) - 1 - ctx->start;
 
 		if (r->headers_out.content_length) {
 			r->headers_out.content_length->hash = 0;
@@ -209,7 +208,7 @@ static ngx_int_t ngx_http_flv_body_filter(ngx_http_request_t * r, ngx_chain_t * 
 		       ctx->offset, ctx->start);
 
 	/* Add streaming header if needed */
-	if (ctx->offset == 0 && ctx->start > 0) {
+	if (ctx->offset == 0 && ctx->start >= 0) {
 		buf = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
 		if (buf == NULL) {
 			return NGX_HTTP_INTERNAL_SERVER_ERROR;
