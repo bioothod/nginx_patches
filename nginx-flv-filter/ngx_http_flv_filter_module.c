@@ -208,7 +208,7 @@ static ngx_int_t ngx_http_flv_body_filter(ngx_http_request_t * r, ngx_chain_t * 
 		       ctx->offset, ctx->start);
 
 	/* Add streaming header if needed */
-	if (ctx->offset == 0 && ctx->start >= 0) {
+	if (ctx->offset == 0 && ctx->start > 0) {
 		buf = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
 		if (buf == NULL) {
 			return NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -245,7 +245,7 @@ static ngx_int_t ngx_http_flv_body_filter(ngx_http_request_t * r, ngx_chain_t * 
 		if (ctx->start >= last) {
 
 			ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-				       "flv: filter body: skip");
+				       "flv_filter: body: skip");
 
 			if (buf->in_file) {
 				buf->file_pos = buf->file_last;
