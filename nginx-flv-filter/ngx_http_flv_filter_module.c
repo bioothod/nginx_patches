@@ -125,7 +125,14 @@ static ngx_int_t ngx_http_flv_header_filter(ngx_http_request_t * r)
 		ngx_http_set_ctx(r, ctx, ngx_http_flv_filter_module);
 
 		r->headers_out.status = NGX_HTTP_OK;
-		r->headers_out.content_length_n += sizeof(ngx_flv_header) - 1 - ctx->start;
+
+		/* we only have to extend content length if FLV header will be added
+		 * in the body filter callback, but it adds FLV header only
+		 * if 'start=' uri parameter is present and it is (and thus @ctx->start) is not zero
+		 */
+		if (ctx->offset == 0 && ctx->start > 0) {
+			r->headers_out.content_length_n += sizeof(ngx_flv_header) - 1 - ctx->start;
+		}
 
 		if (r->headers_out.content_length) {
 			r->headers_out.content_length->hash = 0;
